@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Khatme Bukhari Invitation</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+
+        :root {
+            --env-main: #004d4d;    
+            --env-dark: #003333;    
+            --gold: #d4af37;        
+            --gold-light: #f9e27d;  
+            --card-bg: #fffcf2;     
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a2a2a; 
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 450px;
+            height: 320px;
+            cursor: pointer;
+            perspective: 1500px;
+            filter: drop-shadow(0 20px 50px rgba(0,0,0,0.6));
+        }
+
+        .guest-text-highlight {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            text-align: center;
+            width: auto;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .guest-text-highlight span {
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            display: block;
+            margin-top: 5px; 
+            margin-bottom: 1px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .guest-text-highlight strong {
+            font-family: 'Amiri', serif;
+            font-size: 26px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            white-space: nowrap;
+            display: inline-block;
+            border-bottom: 2px solid var(--gold); 
+            padding-bottom: 2px;
+        }
+
+        .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: var(--env-dark);
+            border: 4px solid var(--gold);
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .card {
+            position: absolute;
+            left: 15px;
+            bottom: 10px;
+            width: 420px;
+            height: 300px;
+            background-color: var(--card-bg);
+            z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            border-radius: 2px;
+            border: 2px solid var(--gold);
+            outline: 6px double var(--gold);
+            outline-offset: -10px;
+            background-image: radial-gradient(circle, rgba(212,175,55,0.05) 1px, transparent 1px);
+            background-size: 15px 15px;
+        }
+
+        .card .arabic { font-family: 'Amiri', serif; font-size: 22px; color: var(--env-main); margin: 0; font-weight: 700; }
+        .card .urdu { font-family: 'Noto Nastaliq Urdu', serif; font-size: 14px; color: #333; margin: 10px 0; line-height: 2.2; direction: rtl; font-weight: bold; }
+        .card .english { font-family: 'Garamond', serif; font-size: 16px; color: var(--env-dark); font-weight: bold; letter-spacing: 1px; text-transform: uppercase; border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); display: inline-block; padding: 2px 10px; margin: 5px 0; }
+        .card .details { font-family: 'Garamond', serif; font-size: 14px; color: #555; margin-top: 10px; font-weight: bold; }
+
+        .flap-piece { position: absolute; width: 100%; height: 100%; background-color: var(--env-main); z-index: 4; }
+        .left-flap { clip-path: polygon(0 0, 51% 50%, 0 100%); border-left: 4px solid var(--gold); }
+        .right-flap { clip-path: polygon(100% 0, 49% 50%, 100% 100%); border-right: 4px solid var(--gold); }
+        .bottom-flap { 
+            clip-path: polygon(0 100%, 50% 49%, 100% 100%); 
+            border-bottom: 4px solid var(--gold);
+            background: linear-gradient(to top, var(--env-main), var(--env-dark));
+        }
+
+        .gold-diagonal-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 6;
+            pointer-events: none;
+            background: 
+                linear-gradient(to bottom right, transparent 49.3%, var(--gold) 50%, transparent 50.7%),
+                linear-gradient(to bottom left, transparent 49.3%, var(--gold) 50%, transparent 50.7%);
+            opacity: 0.95;
+        }
+
+        .top-flap {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--env-main);
+            z-index: 5;
+            clip-path: polygon(0 0, 100% 0, 50% 51%);
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out, z-index 0.6s;
+            border-top: 5px solid var(--gold);
+        }
+
+        .seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 90px; 
+            height: 90px;
+            background: radial-gradient(circle, var(--gold-light), var(--gold));
+            border: 3px solid #fff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 11;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: opacity 0.4s, transform 0.6s;
+            color: #4d3300;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            font-weight: 900;
+            text-align: center;
+            line-height: 1.1;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        .envelope-wrapper.open .top-flap { transform: rotateX(180deg); z-index: 0; }
+        .envelope-wrapper.open .seal, .envelope-wrapper.open .guest-text-highlight { opacity: 0; }
+        .envelope-wrapper.open .card { transform: translateY(-130px); z-index: 15; }
+    </style>
+</head>
+<body>
+
+    <audio id="clickSound" preload="auto">
+        <source src="https://notificationsounds.com/storage/sounds/file-sounds-1150-pristine.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="envelope-wrapper" id="invitation">
+        <div class="envelope-back"></div>
+        
+        <div class="guest-text-highlight">
+            <span>Honored Guest</span>
+            <strong>Amna Muneer</strong>
+        </div>
+        
+        <div class="card">
+            <p class="arabic">بسم الله الرحمن الرحيم</p>
+            <p class="urdu">ختمِ بخاری شریف و دعائیہ تقریب</p>
+            <div class="english">Khatme Bukhari Sharif</div>
+            <p class="urdu">اس پُرنورتقریب میں آپ کی شرکت ہمارے لیے باعثِ مسرت ہوگی۔</p>
+            <div class="english">Grand Invitation</div>
+            <div class="details">
+                <strong>Sunday, 18 Jan 2026</strong><br>
+                Venue: Jamia Nur Al Anwar Lilbanat<br>
+                Time: 10:30 AM
+            </div>
+            <p style="font-size: 10px; color: #999; margin-top: 15px;">(CLICK TO CLOSE)</p>
+        </div>
+
+        <div class="flap-piece left-flap"></div>
+        <div class="flap-piece right-flap"></div>
+        <div class="flap-piece bottom-flap"></div>
+        <div class="gold-diagonal-lines"></div>
+        <div class="top-flap"></div>
+        <div class="seal">OPEN<br>ME</div>
+    </div>
+
+    <script>
+        const wrapper = document.getElementById('invitation');
+        const audio = document.getElementById('clickSound');
+
+        // This function forces the browser to "listen" to the sound
+        function playSound() {
+            audio.pause();
+            audio.currentTime = 0;
+            audio.play().catch(e => console.log("Sound error:", e));
+        }
+
+        wrapper.addEventListener('click', () => {
+            const isOpen = wrapper.classList.contains('open');
+            
+            // Play sound for both Opening and Closing
+            playSound();
+
+            if (!isOpen) {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#d4af37', '#ffffff', '#004d4d']
+                });
+            }
+            
+            wrapper.classList.toggle('open');
+        });
+    </script>
+</body>
+</html>
